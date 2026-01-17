@@ -7519,7 +7519,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Rosenzweig-MacArthur-Reaction-Diffusion-Model">Rosenzweig-MacArthur Reaction-Diffusion Model<a class="anchor-link" href="#Rosenzweig-MacArthur-Reaction-Diffusion-Model">¶</a></h1><p><strong>Authors:</strong> Ege Seçgin, Elia Salerno<br/>
 <strong>Course:</strong> ALCS Mathematical Modelling</p>
-<h2 id="Overview">Overview<a class="anchor-link" href="#Overview">¶</a></h2><p>This notebook implements and analyzes the Rosenzweig-MacArthur predator-prey reaction-diffusion system. We investigate spatial pattern formation through numerical simulation using the Forward-Time Central-Space (FTCS) finite difference scheme, examining how differential diffusion drives spatial patterns in predator-prey interactions.</p>
+<h2 id="Overview">Overview<a class="anchor-link" href="#Overview">¶</a></h2><p>This notebook implements and analyzes the Rosenzweig-MacArthur predator-prey reaction-diffusion system. We investigate spatial pattern formation relative to the "paradox of enrichment", specifically in the oscillatory regime where differential diffusion drives traveling waves and spatiotemporal chaos. Unlike static Turing patterns, the structures observed here are dynamic, arising from the interplay between local limit cycle instabilities (Hopf bifurcation) and spatial diffusion.</p>
 </div>
 </div>
 </div>
@@ -7968,7 +7968,11 @@ Predator density range: 18.68 to 398.03
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Diffusion-Ratio-Analysis">Diffusion Ratio Analysis<a class="anchor-link" href="#Diffusion-Ratio-Analysis">¶</a></h2><p>Comparison of pattern formation under different diffusion regimes.</p>
+<h2 id="Diffusion-Ratio-Analysis">Diffusion Ratio Analysis<a class="anchor-link" href="#Diffusion-Ratio-Analysis">¶</a></h2><p>We compare pattern formation under different diffusion regimes to understand the role of mobility:</p>
+<ul>
+<li><strong>Fast Prey Diffusion ($D_u &gt; D_v$):</strong> Promotes spatial heterogeneity and "diffusion-induced chaos" as prey escape local predation pressure, initiating wave instabilities.</li>
+<li><strong>Fast Predator Diffusion ($D_v &gt; D_u$):</strong> Suppresses spatial patterns through "spatial synchronization" or "phase locking". rapid predator dispersal averages out prey density gradients, coupling the system into global bulk oscillations.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8052,7 +8056,13 @@ Predator density range: 18.68 to 398.03
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Linear-Stability-Analysis">Linear Stability Analysis<a class="anchor-link" href="#Linear-Stability-Analysis">¶</a></h2><p>The Jacobian at coexistence equilibrium determines local stability. With trace(J) &gt; 0 and det(J) &gt; 0, the system is an unstable focus exhibiting Hopf bifurcation dynamics. Differential diffusion amplifies these oscillations into traveling waves.</p>
+<h2 id="Linear-Stability-Analysis">Linear Stability Analysis<a class="anchor-link" href="#Linear-Stability-Analysis">¶</a></h2><p>The Jacobian at the coexistence equilibrium determines local stability.</p>
+<ul>
+<li><strong>Paradox of Enrichment:</strong> High carrying capacity ($K=500$) pushes the system past the Hopf bifurcation point (<code>trace &gt; 0</code>).</li>
+<li><strong>Local Dynamic:</strong> With <code>discriminant &gt; 0</code>, the equilibrium is locally an <strong>Unstable Node</strong>. Trajectories move directly away from the equilibrium.</li>
+<li><strong>Global Dynamic:</strong> Since the system is bounded (logistic growth), these unstable trajectories approach a global <strong>Limit Cycle</strong>.</li>
+<li><strong>Pattern Nature:</strong> The resulting spatial structures are "Periodic Traveling Waves" or "Spatiotemporal Chaos", distinct from static Turing patterns (which typically require <code>trace &lt; 0</code> and specific inhibition mechanisms like the 'fear effect').</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8074,25 +8084,26 @@ Predator density range: 18.68 to 398.03
 
 <span class="n">J</span> <span class="o">=</span> <span class="n">compute_jacobian</span><span class="p">(</span><span class="n">u_ss</span><span class="p">,</span> <span class="n">v_ss</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
 <span class="n">trace</span><span class="p">,</span> <span class="n">det</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">J</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">J</span><span class="p">)</span>
+<span class="n">discriminant</span> <span class="o">=</span> <span class="n">trace</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">det</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steady state: u = </span><span class="si">{</span><span class="n">u_ss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, v = </span><span class="si">{</span><span class="n">v_ss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jacobian: trace = </span><span class="si">{</span><span class="n">trace</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, det = </span><span class="si">{</span><span class="n">det</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jacobian elements: J_11 = </span><span class="si">{</span><span class="n">J</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, J_12 = </span><span class="si">{</span><span class="n">J</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"                   J_21 = </span><span class="si">{</span><span class="n">J</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, J_22 = </span><span class="si">{</span><span class="n">J</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Discriminant: </span><span class="si">{</span><span class="n">discriminant</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">det</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">trace</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Stability: Stable equilibrium (no diffusion)"</span><span class="p">)</span>
-        <span class="n">turing</span> <span class="o">=</span> <span class="n">J</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">Du</span> <span class="o">+</span> <span class="n">J</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">Dv</span>
-        <span class="k">if</span> <span class="n">turing</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Turing instability: Possible with differential diffusion"</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Turing instability: Not satisfied"</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">trace</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Stability: Unstable focus (Hopf bifurcation regime)"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Pattern mechanism: Oscillatory instability amplified by differential diffusion"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Expected patterns: Traveling waves (not stationary Turing patterns)"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Note: J_22 ≈ </span><span class="si">{</span><span class="n">J</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (near-zero, marginal predator stability)"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">discriminant</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">local_type</span> <span class="o">=</span> <span class="s2">"Unstable Node"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">local_type</span> <span class="o">=</span> <span class="s2">"Unstable Focus"</span>
+            
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Stability: </span><span class="si">{</span><span class="n">local_type</span><span class="si">}</span><span class="s2"> (Oscillatory regime)"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Mechanism: Paradox of enrichment drives limit cycles."</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Patterns: Periodic traveling waves or spatiotemporal chaos."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">discriminant</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+             <span class="nb">print</span><span class="p">(</span><span class="s2">"Note: Real eigenvalues imply local node, but global limit cycle persists."</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Stability: Saddle point"</span><span class="p">)</span>
 </pre></div>
@@ -8109,13 +8120,12 @@ Predator density range: 18.68 to 398.03
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Steady state: u = 100.0000, v = 240.0000
 Jacobian: trace = 0.2333, det = 0.0033
-Jacobian elements: J_11 = 0.2333, J_12 = -0.1667
-                   J_21 = 0.0200, J_22 = 0.0000
+Discriminant: 0.0411
 
-Stability: Unstable focus (Hopf bifurcation regime)
-Pattern mechanism: Oscillatory instability amplified by differential diffusion
-Expected patterns: Traveling waves (not stationary Turing patterns)
-Note: J_22 ≈ 0.0000 (near-zero, marginal predator stability)
+Stability: Unstable Node (Oscillatory regime)
+Mechanism: Paradox of enrichment drives limit cycles.
+Patterns: Periodic traveling waves or spatiotemporal chaos.
+Note: Real eigenvalues imply local node, but global limit cycle persists.
 </pre>
 </div>
 </div>
