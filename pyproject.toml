@@ -1,8 +1,7 @@
 [project]
 name = "v5-2-project"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+description = "A reaction-diffusion simulation of the Rosenzweig-MacArthur predator-prey model, featuring numerical experiments and visualization in Python."
 requires-python = ">=3.13"
 dependencies = [
     "matplotlib>=3.10.6",
